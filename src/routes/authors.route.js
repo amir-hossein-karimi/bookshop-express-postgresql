@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ message: "user id is required" });
+    return res.status(400).json({ message: "author id is required" });
   }
 
   const result = await pool.query("SELECT * FROM authors WHERE id = $1", [id]);
@@ -48,11 +48,11 @@ router.patch("/:id", async (req, res) => {
   const { name, country } = req.body;
 
   if (!id) {
-    res.status(400).json({ message: "user id is required" });
+    return res.status(400).json({ message: "author id is required" });
   }
 
   if (!name && !country) {
-    res.status(400).json({ message: "name or country is required" });
+    return res.status(400).json({ message: "name or country is required" });
   }
 
   const result = await pool.query(
@@ -69,6 +69,22 @@ router.patch("/:id", async (req, res) => {
   }
 
   res.json(result.rows[0]);
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "author id is required" });
+  }
+
+  const result = await pool.query("DELETE FROM authors WHERE id = $1", [id]);
+
+  if (result.rowCount === 0) {
+    return res.status(404).json({ message: "author is not found" });
+  }
+
+  res.status(204).end();
 });
 
 module.exports = router;
