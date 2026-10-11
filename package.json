@@ -21,7 +21,8 @@
   "homepage": "https://github.com/amir-hossein-karimi/express-postgresql#readme",
   "dependencies": {
     "dotenv": "^18.0.7",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
