@@ -8,4 +8,23 @@ router.get("/", async (req, res) => {
   res.json(result.rows);
 });
 
+router.post("/", async (req, res) => {
+  const { name, country } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      message: "name is required",
+    });
+  }
+
+  const result = await pool.query(
+    "INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING *",
+    [name, country],
+  );
+
+  console.log({ result });
+
+  res.status(201).json(result.rows[0]);
+});
+
 module.exports = router;

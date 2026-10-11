@@ -1,3 +1,10 @@
 ### get all authors
 GET http://localhost:5050/authors HTTP/1.1
 
+### create author
+POST http://localhost:5050/authors HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "test inserted 2"
+}

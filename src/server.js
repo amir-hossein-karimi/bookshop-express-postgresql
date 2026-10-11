@@ -10,6 +10,8 @@ app.get("/", (req, res) => {
   res.send("server is running successfully");
 });
 
+app.use(express.json());
+
 app.use("/authors", authorsRoute);
 
 app.listen(PORT, () => {
