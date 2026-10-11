@@ -43,4 +43,32 @@ router.get("/:id", async (req, res) => {
   res.status(200).json(result.rows[0]);
 });
 
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, country } = req.body;
+
+  if (!id) {
+    res.status(400).json({ message: "user id is required" });
+  }
+
+  if (!name && !country) {
+    res.status(400).json({ message: "name or country is required" });
+  }
+
+  const result = await pool.query(
+    `UPDATE authors
+        SET name = COALESCE($1, name),
+            country = COALESCE($2, country)
+        WHERE id = $3
+        RETURNING *`,
+    [name, country, id],
+  );
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({ error: "Author not found" });
+  }
+
+  res.json(result.rows[0]);
+});
+
 module.exports = router;
