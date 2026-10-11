@@ -14,6 +14,17 @@ app.use(express.json());
 
 app.use("/authors", authorsRoute);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  // Postgres errors have a 5-character code
+  if (err.code === "22P02") {
+    return res.status(400).json({ error: "Invalid input" }); // e.g. id = "abc"
+  }
+
+  res.status(500).json({ error: "Internal server error" });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
