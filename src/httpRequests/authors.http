@@ -8,3 +8,7 @@ Content-Type: application/json
 {
     "name": "test inserted 2"
 }
+
+### get author by id
+GET http://localhost:5050/authors/2 HTTP/1.1
+
