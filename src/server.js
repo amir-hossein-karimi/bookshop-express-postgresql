@@ -1,11 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 
-const authorsRoute = require("./routes/authors.route");
-const booksRoute = require("./routes/books.route");
-
 const app = express();
-const PORT = process.env.PORT || 5000;
+const SERVER_PORT = process.env.SERVER_PORT || 5000;
 
 app.get("/", (req, res) => {
   res.send("server is running successfully");
@@ -13,8 +10,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 
-app.use("/authors", authorsRoute);
-app.use("/books", booksRoute);
+// routes here
 
 app.use((err, req, res, next) => {
   console.error(err);
@@ -37,6 +33,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(SERVER_PORT, () => {
+  console.log(`Server is running on port ${SERVER_PORT}`);
 });
