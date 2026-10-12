@@ -1,4 +1,7 @@
 ### get all books
+GET http://localhost:5050/books HTTP/1.1
+
+### get using books pagination
 GET http://localhost:5050/books?limit=2&page=2 HTTP/1.1
 
 ### create book
@@ -18,3 +21,6 @@ Content-Type: application/json
 {
     "price": 10.99
 }
+
+### delete book
+DELETE http://localhost:5050/books/3 HTTP/1.1
