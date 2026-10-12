@@ -1,5 +1,5 @@
 ### get all books
-GET http://localhost:5050/books HTTP/1.1
+GET http://localhost:5050/books?limit=2&page=2 HTTP/1.1
 
 ### create book
 POST http://localhost:5050/books HTTP/1.1
