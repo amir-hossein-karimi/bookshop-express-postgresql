@@ -8,6 +8,27 @@ router.get("/", async (req, res) => {
   res.json(result.rows);
 });
 
+router.get("/:id/books", async (req, res) => {
+  const authorId = req.params.id;
+
+  if (!authorId) {
+    return res.status(400).json({ message: "author id is required" });
+  }
+
+  const result = await pool.query(
+    `SELECT books.id, books.title, books.price, authors.name AS author
+     FROM books
+     JOIN authors ON authors.id = books.author_id
+     WHERE books.author_id = $1
+     ORDER BY books.id`,
+    [authorId],
+  );
+
+  console.log({ rows: result.rows });
+
+  res.status(200).json(result.rows);
+});
+
 router.post("/", async (req, res) => {
   const { name, country } = req.body;
 
