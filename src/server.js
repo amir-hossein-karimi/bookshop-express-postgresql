@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 
+import movieRouter from "./routes/movie.route.js";
+
 dotenv.config();
 
 const app = express();
@@ -12,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 
-// routes here
+app.use("/movies", movieRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);
