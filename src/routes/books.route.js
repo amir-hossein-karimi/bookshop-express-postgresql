@@ -37,4 +37,35 @@ router.post("/", async (req, res) => {
   res.status(201).json(result.rows[0]);
 });
 
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, price, author_id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: "book's id is required" });
+  }
+
+  if (title === undefined && price === undefined && author_id === undefined) {
+    return res
+      .status(400)
+      .json({ message: "title, price or author_id is required" });
+  }
+
+  const result = await pool.query(
+    `UPDATE books
+    SET title = COALESCE($1, title),
+        price = COALESCE($2, price),
+        author_id = COALESCE($3, author_id)
+    WHERE id = $4
+    RETURNING *`,
+    [title, price, author_id, id],
+  );
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({ message: "Book not found" });
+  }
+
+  res.status(200).json(result.rows[0]);
+});
+
 module.exports = router;
