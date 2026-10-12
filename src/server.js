@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 
 const authorsRoute = require("./routes/authors.route");
+const booksRoute = require("./routes/books.route");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 app.use(express.json());
 
 app.use("/authors", authorsRoute);
+app.use("/books", booksRoute);
 
 app.use((err, req, res, next) => {
   console.error(err);
