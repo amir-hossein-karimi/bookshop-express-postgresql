@@ -95,17 +95,22 @@ router.patch("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    return res.status(400).json({ message: "author id is required" });
+  try {
+    const result = await pool.query("DELETE FROM authors WHERE id = $1", [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Author not found" });
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    if (err.code === "23503") {
+      return res
+        .status(409)
+        .json({ message: "Cannot delete an author who still has books" });
+    }
+    throw err;
   }
-
-  const result = await pool.query("DELETE FROM authors WHERE id = $1", [id]);
-
-  if (result.rowCount === 0) {
-    return res.status(404).json({ message: "author is not found" });
-  }
-
-  res.status(204).end();
 });
 
 module.exports = router;
