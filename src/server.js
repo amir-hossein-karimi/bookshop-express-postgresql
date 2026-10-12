@@ -24,6 +24,16 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ error: "Invalid input" }); // e.g. id = "abc"
   }
 
+  if (err.code === "23503") {
+    return res.status(400).json({ error: "Author does not exist" }); // foreign key violation
+  }
+
+  if (err.code === "23514") {
+    return res
+      .status(400)
+      .json({ error: "Invalid value (check constraint failed)" }); // e.g. negative price
+  }
+
   res.status(500).json({ error: "Internal server error" });
 });
 
