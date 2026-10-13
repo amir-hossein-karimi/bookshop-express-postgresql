@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+import { connectDB, disconnectDB } from "./config/db.js";
 
 import movieRouter from "./routes/movie.route.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
 const SERVER_PORT = process.env.SERVER_PORT || 5000;
@@ -37,6 +39,28 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(SERVER_PORT, () => {
+const server = app.listen(SERVER_PORT, () => {
   console.log(`Server is running on port ${SERVER_PORT}`);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("unhandled rejection: ", err);
+  server.close(async () => {
+    await disconnectDB();
+    process.exit(1);
+  });
+});
+
+process.on("uncaughtException", async (err) => {
+  console.log("uncaught exception: ", err);
+  await disconnectDB();
+  process.exit(1);
+});
+
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM received, shutting down gracefully");
+  server.close(async () => {
+    await disconnectDB();
+    process.exit(0);
+  });
 });
